@@ -47,4 +47,5 @@ if (choix==2):
             l=T[i,:]
             dist=np.linalg.norm(l-G)**2
             p=p+dist
-        print('l"inertie total du nuage   est ',+p/41)
+        print('l"inertie total du nuage   est ',+p/41
+        p
