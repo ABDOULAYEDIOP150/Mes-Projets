@@ -1,7 +1,7 @@
 # Mes-Projets
-####  Ce repository comporte les projets et devoirs maisons réalisés au cours de mon parcours sur différents language de programmation 
+####  Ce référentiel comporte les projets et devoirs maisons réalisés au cours de mon parcours sur différentes language de programmation 
 ##### Défilez vous dans les branches pour voir les différentes languages de Programmation utilisées 
-###### Logiciel R :Statistiques 
+###### Logiciel R : Statistiques 
 ###### logiciel Python: Analyse des données ,Machine learning 
-###### Logiciel C : Fiare du code 
+###### Logiciel C :  Code manipules les bits , les fonctions , les tableaux et les matrices  sous C 
 ###### Logiciel Scilab : Pour faire la simulation des modéles mathématiques (OPtimisation et la Modélisation )
