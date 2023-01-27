@@ -1,0 +1,50 @@
+import numpy as np
+import collections as cl
+import os
+import pandas as pd
+
+#lire les donnés sur python la ligne ci-dessous#
+data = pd.read_csv('C:\\Users\\SCD UM\\Desktop\\AD\\logtsDK (5).csv',sep = '\t')
+A=(np.mean(data.iloc[:,1:12]))
+B=(np.std(data.iloc[:,1:12]))
+D=data.iloc[:,1:12]-A
+C=D/B#données centrées et réduites  #
+T=np.matrix(C) #Matrice centrée et réduite#
+K=(data.iloc[:,1:12]) #données non centrées#
+S=np.matrix(K) #Matrice non centrée# 
+#variable choix #
+choix=2 #c'est à l'utilisateur de faire son choix il doit donner une valeur à choix  qui est compris entre 0 et 10#
+
+#donne choix 0 si vous voulez visualisez les données centrées réduites#
+if (choix==0):
+     print('les données centrées et réduites sontr ci dessous',+C)
+    
+#Déterminer le barycentre du nuage de point#
+if (choix==1):
+        Gmoyenne=np.zeros(11)
+        for i in range(0,11):
+            z=np.mean(T[:,i])
+            if (abs(z) < 1.e-15):   #les valeurs sont plus petits que e-15 donc sensiblement égale 0#
+                z=0
+            Gmoyenne[i]=z
+        print('le barycentre du nuage est ',+Gmoyenne)
+        
+if (choix==2):
+        j=np.zeros(11) 
+        j=sum(S)
+        #Permet de retrouver la somme globale des 11 variables#
+        x=0
+        for i in range(0,11):
+            x=x+j[:,i] 
+        j=int(x) ; poids=np.zeros(41)
+        for u in range(0,41):
+            e=int(np.sum(S[u:(u+1),:]))
+            poids[u]=e/j
+
+        G=np.zeros(11)
+        p=0
+        for i in range (0,41):
+            l=T[i,:]
+            dist=np.linalg.norm(l-G)**2
+            p=p+dist
+        print('l"inertie total du nuage   est ',+p/41)
