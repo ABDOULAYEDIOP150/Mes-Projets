@@ -1,22 +1,25 @@
-# .github/workflows/compile.yml
-
-name: Compile HTML
-
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main  # Changez ceci en fonction de votre branche par défaut
+    branches: main
+
+name: Quarto Publish
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-    - name: Set up Quarto
-      uses: ropensci/setup-quarto@v0.3.1
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
 
-    - name: Compile HTML
-      run: quarto render path/Data_Mining.html
+      - name: Render and Publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
