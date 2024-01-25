@@ -1,0 +1,22 @@
+# .github/workflows/compile.yml
+
+name: Compile HTML
+
+on:
+  push:
+    branches:
+      - main  # Changez ceci en fonction de votre branche par défaut
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Quarto
+      uses: ropensci/setup-quarto@v0.3.1
+
+    - name: Compile HTML
+      run: quarto render path/vers/votre/fichier.Rmd
