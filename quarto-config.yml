@@ -1,0 +1,9 @@
+# quarto-config.yml
+
+# Spécifiez le format de sortie
+output:
+  html_document:
+    # Indiquez le nom du fichier de sortie
+    toc: false
+    number_sections: false
+    theme: cosmo
