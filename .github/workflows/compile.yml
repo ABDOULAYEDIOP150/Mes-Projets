@@ -19,4 +19,4 @@ jobs:
       uses: ropensci/setup-quarto@v0.3.1
 
     - name: Compile HTML
-      run: quarto render path/vers/votre/fichier.Rmd
+      run: quarto render path/Data_Mining.html
