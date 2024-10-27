@@ -1,0 +1,143 @@
+---
+title: "TP1 - Régressions Pénalisées"
+author: 
+  - **Nom :** Diop Abdoulaye
+  - Dialla Kenewy
+date: "2024-10-10"
+output: 
+  pdf_document:
+    toc: true               # Ajouter un sommaire
+    toc_depth: 2            # Profondeur du sommaire
+    number_sections: true    # Numéroter les sections
+    highlight: tango         # Améliorer la mise en forme du code
+    latex_engine: xelatex    # Utiliser xelatex pour une meilleure compatibilité de polices
+    keep_tex: true           # Conserver le fichier .tex après compilation
+fontsize: 12pt
+geometry: margin=1in       # Définir les marges
+mainfont: "Times New Roman" # Utiliser une police élégante
+---
+
+
+
+```{r, echo=FALSE,include=FALSE}
+# Lire le fichier CSV en utilisant la première colonne comme noms de lignes
+data <- read.csv("Datagenus.csv", header = TRUE, sep = ";", dec = ".", row.names = 1)
+# donnees sans la colonne forest 
+data <- data[, -30]
+data
+# Supprimer le à partir de la colonne  68 juisqu' à  128 
+data<-data[,-c(69:108)]
+head(data)
+## Convertir la variable surface
+val<-as.numeric(gsub(",", ".", data$surface))
+data$surface<-val
+data$surface
+```
+
+
+## Description des données 
+
+Ce jeu de données a été collecté dans le bassin du fleuve Congo et contient **1000 observations** (correspondant à des parcelles forestières), avec **110 variables**. Les variables sont organisées en plusieurs groupes mixtes :
+
+\underline{\textbf{Abondance des espèces d'arbres}}
+
+
+Ce groupe contient les données d'abondance pour **27 espèces d'arbres** différentes. Ces abondances sont représentées par des variables numérotées de **gen1 à gen27**.
+
+\underline{\textbf{Variables géographiques quantitatives}}
+
+Ce groupe comprend des mesures quantitatives qui caractérisent les parcelles :
+
+- **Latitude** et **Longitude** : Position géographique des parcelles.
+- **Altitude** : Hauteur par rapport au niveau de la mer.
+- **Pluviométrie** : Mesures de précipitations annuelles et mensuelles, reflétant les conditions climatiques des parcelles.
+
+\underline{\textbf{Variables qualitatives}}
+
+- **Geology** : Type de sol, une variable qui peut avoir un impact sur la croissance des arbres.
+- **Forest** : Type de forêt, bien que cette variable ne doit pas être utilisée dans cette analyse.
+
+\underline{\textbf{Indices de végétation améliorés (EVI)}}
+
+Ce groupe de variables fournit des mesures de la santé et de la vigueur de la végétation, donnant des informations sur la **photosynthèse** des arbres.
+
+\underline{\textbf{Surface des parcelles}}
+
+Cette variable indique la **surface** de chaque parcelle, influençant potentiellement l'abondance des espèces observées.
+
+
+L'objectif de ce travail sera de modéliser au mieux la densité globale de peuplement arboré par ces 27 espèces à l'aide des autres variables
+
+## 1. Caculs
+
+### a) Calcul de la variable dépendante Y:
+
+
+
+```{r, echo=FALSE, include=FALSE}
+# Calculer la somme des colonnes d'abondance (gen1 à gen27)
+df_gen<-data[,1:27]
+Y <- rowSums(data[, 1:27])
+Y<-Y/data$surface
+# Ajouter Y comme nouvelle colonne dans le jeu de données
+data <- cbind(data, Y)
+```
+
+
+
+
+
+### b) Calcul du tableau des variables explicatives:
+
+
+
+```{r,echo=FALSE, include=FALSE}
+# les variables quantitatives de geographie 
+
+geographi <- data[c(28:41, 66, 67)]
+geographi
+valeurs_numeriques<-matrix(0,nrow(geographi),ncol(geographi))
+geographi<-as.matrix(geographi)
+# Remplacez les virgules par des points et convertissez en numérique
+
+for ( i in 1:ncol(geographi)){
+valeurs_numeriques[,i] <- as.numeric(gsub(",", ".", geographi[,i]))
+}
+geographi<-valeurs_numeriques
+
+```
+
+
+```{r,  echo=FALSE, include=FALSE}
+library("ade4")
+# Sélectionner la variable géologie et la convertir en variables indicatrices
+geology<-data$geology
+geology<-as.data.frame(geology)
+geology <-acm.disjonctif(geology)
+
+# Initialiser une matrice pour les produits
+produits <- matrix(NA, nrow =nrow(data), ncol = 0)
+for (i in 1:ncol(geology)) {
+# Effectuer la multiplication entre les colonnes de géographie et la colonne de géologie
+product_col <- geographi * geology[, i]
+# Concaténer la nouvelle colonne au résultat
+produits <- cbind(produits, product_col)
+}
+
+produits
+```
+
+
+
+
+L'inclusion des interactions entre les variables géographiques quantitatives et la variable qualitative *geology* se justifie pour trois raisons :
+
+- **Interprétation écologique** : Le type de sol (*geology*) influence les relations entre variables géographiques (latitude, longitude, altitude, pluviométrie) et densité d'arbres. Par exemple, certains sols retiennent mieux l'eau, modifiant ainsi l'effet de la pluviométrie.
+
+- **Hétérogénéité des effets** : Les interactions capturent des effets spécifiques au sol, offrant un modèle plus flexible et adapté aux variations environnementales.
+
+- **Précision accrue** : Dans les écosystèmes complexes, ces interactions améliorent la précision des prédictions pour chaque type de sol selon les conditions géographiques.
+
+
+
+
