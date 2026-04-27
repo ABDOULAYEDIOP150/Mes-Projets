@@ -1,5 +1,5 @@
 # Mes-Projets
-####  Ce référentiel comporte les projets et devoirs maisons réalisés au cours de mon parcours sur différentes language de programmation 
+####  Ce référentiel comporte les projets et devoirs maisons réalisés au cours de mon parcours sur différentes language de programmation mais  niveau scolaire.
 ##### Défilez vous dans les branches pour voir les différentes languages de Programmation utilisées  si vous désirez voir mes projets fait en binome vous pouvez cliquez sur mon profil
 ###### Logiciel R : Statistiques 
 ###### logiciel Python: Analyse des données ,Machine learning 
